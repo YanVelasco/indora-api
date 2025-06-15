@@ -1,0 +1,5 @@
+CREATE TABLE TB_ROLES
+(
+    role_id   UUID PRIMARY KEY,
+    role_name VARCHAR(30) NOT NULL UNIQUE
+);
