@@ -1,6 +1,9 @@
 server:
   port: 8080
 
+auth:
+  jwtSecret: PZTpk3by4ybNqGO/A6BU1dysEcP2e7To9dKmAbgsEsa2jqLBqvnCsqdAMjHGft6K5JtN4zeoSW4JFswMqpjaVclDSC4W49NaH11seniKz6M=
+  jwtExpirationMs: 14400000
 spring:
   application:
     name: indora
