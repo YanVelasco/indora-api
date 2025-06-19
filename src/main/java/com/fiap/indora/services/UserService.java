@@ -33,4 +33,6 @@ public interface UserService {
 
     String githubLogin();
 
+    String getTokenFromGithub(String code);
+
 }

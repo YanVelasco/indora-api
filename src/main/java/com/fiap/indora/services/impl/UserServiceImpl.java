@@ -17,18 +17,20 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -46,11 +48,17 @@ public class UserServiceImpl implements UserService {
     @Value("${auth.github.redirectUri}")
     private String REDIRECT_URI;
 
+    @Value("${auth.github.clientSecret}")
+    private String clientSecret;
+
+    private final RestClient restClient;
+
     public UserServiceImpl(UserRepository userRepository, RoleService roleService,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, RestClient.Builder restClientbuilder) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.restClient = restClientbuilder.build();
     }
 
     @Override
@@ -209,5 +217,18 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Erro ao gerar URL de login do GitHub", e);
         }
     }
+
+    public String getTokenFromGithub(String code) {
+        var response = restClient.post()
+                .uri("https://github.com/login/oauth/access_token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Map.of("code", code, "client_id", CLIENT_ID,
+                        "client_secret", clientSecret, "redirect_uri", REDIRECT_URI))
+                .retrieve()
+                .body(String.class);
+        return response;
+    }
+
 
 }

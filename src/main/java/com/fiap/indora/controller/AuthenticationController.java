@@ -68,7 +68,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtDto(jwt));
     }
 
-    @GetMapping("/github")
+    @GetMapping("/github/login")
     public ResponseEntity<Void> githubLogin() {
         var headers = new HttpHeaders();
         var url = userService.githubLogin();
@@ -81,4 +81,12 @@ public class AuthenticationController {
         );
     }
 
+    @GetMapping("/github/authorized")
+    public ResponseEntity<String> getTokenFromGithub(
+            @RequestParam("code") String code
+    ) {
+        logger.debug("GET getTokenFromGithub code received {}", code);
+        var tokenJwt = userService.getTokenFromGithub(code);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tokenJwt);
+    }
 }
