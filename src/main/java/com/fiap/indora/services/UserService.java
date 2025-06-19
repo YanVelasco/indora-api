@@ -1,5 +1,6 @@
 package com.fiap.indora.services;
 
+import com.fiap.indora.dtos.JwtDto;
 import com.fiap.indora.dtos.UserDto;
 import com.fiap.indora.model.UserModel;
 import org.springframework.data.domain.Page;
@@ -34,5 +35,7 @@ public interface UserService {
     String githubLogin();
 
     String getTokenFromGithub(String code);
+
+    JwtDto getEmailFromGithub(String code);
 
 }

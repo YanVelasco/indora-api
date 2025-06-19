@@ -82,11 +82,11 @@ public class AuthenticationController {
     }
 
     @GetMapping("/github/authorized")
-    public ResponseEntity<String> getTokenFromGithub(
+    public ResponseEntity<JwtDto> userAuthentication(
             @RequestParam("code") String code
     ) {
         logger.debug("GET getTokenFromGithub code received {}", code);
-        var tokenJwt = userService.getTokenFromGithub(code);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tokenJwt);
+        JwtDto jwtDto = userService.getEmailFromGithub(code);
+        return ResponseEntity.status(HttpStatus.CREATED).body(jwtDto);
     }
 }
