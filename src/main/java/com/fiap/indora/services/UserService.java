@@ -31,4 +31,6 @@ public interface UserService {
 
     Boolean existsByEmail(String email);
 
+    String githubLogin();
+
 }

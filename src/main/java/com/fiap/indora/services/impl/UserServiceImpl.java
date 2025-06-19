@@ -14,6 +14,7 @@ import com.fiap.indora.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -37,7 +40,13 @@ public class UserServiceImpl implements UserService {
     final RoleService roleService;
     final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,RoleService roleService,
+    @Value("${auth.github.clientId}")
+    private String CLIENT_ID;
+
+    @Value("${auth.github.redirectUri}")
+    private String REDIRECT_URI;
+
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleService = roleService;
@@ -184,6 +193,21 @@ public class UserServiceImpl implements UserService {
         logger.debug("GET existsByEmail email received {}", email);
 
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public String githubLogin() {
+        try {
+            String scope = URLEncoder.encode("read:user,user:email", StandardCharsets.UTF_8);
+            String redirectUri = URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8);
+            return "https://github.com/login/oauth/authorize"
+                    + "?client_id=" + CLIENT_ID
+                    + "&redirect_uri=" + redirectUri
+                    + "&scope=" + scope;
+        } catch (Exception e) {
+            logger.error("Erro ao gerar URL de login do GitHub", e);
+            throw new RuntimeException("Erro ao gerar URL de login do GitHub", e);
+        }
     }
 
 }

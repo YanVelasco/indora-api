@@ -4,6 +4,10 @@ server:
 auth:
   jwtSecret: PZTpk3by4ybNqGO/A6BU1dysEcP2e7To9dKmAbgsEsa2jqLBqvnCsqdAMjHGft6K5JtN4zeoSW4JFswMqpjaVclDSC4W49NaH11seniKz6M=
   jwtExpirationMs: 14400000
+  github:
+    clientId: ${AUTH_GIT_HUB_CLIENTID}
+    clientSecret: ${AUTH_GIT_HUB_CLIENTSECRET}
+    redirectUri: ${AUTH_GIT_HUB_REDIRECTURI}
 spring:
   application:
     name: indora
