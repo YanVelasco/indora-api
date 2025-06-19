@@ -5,11 +5,29 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=indora_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/indora_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - AUTH_GIT_HUB_CLIENTID=${AUTH_GIT_HUB_CLIENTID}
+      - AUTH_GIT_HUB_CLIENTSECRET=${AUTH_GIT_HUB_CLIENTSECRET}
+      - AUTH_GIT_HUB_REDIRECTURI=${AUTH_GIT_HUB_REDIRECTURI}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  indora-api:
+    image: yanvelasco/indora-api:latest
+    container_name: indora_api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/indora_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - AUTH_GIT_HUB_CLIENTID=${AUTH_GIT_HUB_CLIENTID}
+      - AUTH_GIT_HUB_CLIENTSECRET=${AUTH_GIT_HUB_CLIENTSECRET}
+      - AUTH_GIT_HUB_REDIRECTURI=${AUTH_GIT_HUB_REDIRECTURI}
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
