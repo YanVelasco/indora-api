@@ -8,9 +8,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/indora_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
-      - AUTH_GIT_HUB_CLIENTID=${AUTH_GIT_HUB_CLIENTID}
-      - AUTH_GIT_HUB_CLIENTSECRET=${AUTH_GIT_HUB_CLIENTSECRET}
-      - AUTH_GIT_HUB_REDIRECTURI=${AUTH_GIT_HUB_REDIRECTURI}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
